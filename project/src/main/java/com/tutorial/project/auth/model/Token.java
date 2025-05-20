@@ -16,6 +16,8 @@ import java.util.Date;
 @Getter
 @Setter
 public class Token implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional = false)
