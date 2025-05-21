@@ -26,18 +26,9 @@ public class AuthService {
     private static final long accessTime=15*60*1000;
     private static final long refreshTime=7*24*60*60*1000;
 
-//    register
+    //    register
     @Transactional
     public AuthResponse register(RegisterRequest request, HttpServletResponse response){
-        if(request.getEmail().isEmpty() ||
-                request.getEmail()==null ||
-                request.getUsername()==null ||
-                request.getUsername().isEmpty() ||
-                request.getPassword().isEmpty() ||
-                request.getPassword()==null
-        ){
-         throw new RuntimeException("All field are required!");
-        }
         if(userRepository.findByEmail(request.getEmail()).isPresent()){
             throw new RuntimeException("User already exist");
         }
@@ -57,7 +48,7 @@ public class AuthService {
         cookieService.addTokenToCookie(response,refreshToken);
         return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),accessToken,refreshToken);
     }
-//    login
+    //    login
     @Transactional
     public AuthResponse login(LoginRequest request,HttpServletResponse response){
         User user=userRepository.findByEmail(request.getEmail()).orElseThrow(()->new RuntimeException("User not found"));
@@ -65,16 +56,17 @@ public class AuthService {
             throw new RuntimeException("Invalid password!");
         }
         String accessToken=tokenService.generateAccessToken(user.getEmail());
-        String refreshToken=tokenService.generateRefreshToken(user.getEmail());
-        Token token=new Token();
-        token.setUser(user);
-        token.setRefreshToken(refreshToken);
-        token.setExpiryDate(new Date(System.currentTimeMillis()+refreshTime));
-        tokenRepository.save(token);
+        Token token=tokenRepository.findByUser(user).orElseGet(()->{
+            Token token1=new Token();
+            token1.setUser(user);
+            token1.setRefreshToken(tokenService.generateRefreshToken(user.getEmail()));
+            token1.setExpiryDate(new Date(System.currentTimeMillis()+refreshTime));
+            return tokenRepository.save(token1);
+        });
         cookieService.addTokenToCookie(response,token.getRefreshToken());
-        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),accessToken,refreshToken);
+        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),accessToken,token.getRefreshToken());
     }
-//    refresh method
+    //    refresh method
     @Transactional
     public AuthResponse refresh(String refreshToken ,HttpServletResponse response){
         if(refreshToken==null || refreshToken.isEmpty()){
@@ -101,14 +93,19 @@ public class AuthService {
             throw new RuntimeException("Refresh token expired!");
         }
         String newAccessToken=tokenService.generateAccessToken(email);
-        //String newRefreshToken=tokenService.generateRefreshToken(email);
-//        tokenRepository.delete(storedToken);
-//        Token token1=new Token();
-//        token1.setUser(user);
-//        token1.setRefreshToken(newRefreshToken);
-//        token1.setExpiryDate(new Date(System.currentTimeMillis()+refreshTime));
-//        tokenRepository.save(token1);
         cookieService.addTokenToCookie(response,refreshToken);
         return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),newAccessToken,refreshToken);
     }
+    @Transactional
+    public void logout(String refreshToken,HttpServletResponse response){
+        if(refreshToken==null || refreshToken.isEmpty()){
+            throw new RuntimeException("Token is required!");
+        }
+        Token token=tokenRepository.findByRefreshToken(refreshToken).orElseThrow(()->new RuntimeException("Invalid token"));
+        tokenRepository.delete(token);
+        cookieService.clearCookie(response);
+    }
 }
+
+//    logout
+

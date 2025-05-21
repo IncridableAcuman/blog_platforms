@@ -33,4 +33,11 @@ public class AuthController {
         String refreshToken=authorization.substring(7);
         return ResponseEntity.ok(authService.refresh(refreshToken,response));
     }
+//    logout
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorization,HttpServletResponse response){
+        String refreshToken=authorization.substring(7);
+        authService.logout(refreshToken,response);
+        return ResponseEntity.ok("User logged out");
+    }
 }

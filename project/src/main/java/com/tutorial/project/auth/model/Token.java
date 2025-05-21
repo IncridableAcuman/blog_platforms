@@ -20,8 +20,7 @@ public class Token implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "user_id")
+    @OneToOne
     private User user;
 
     @Column(unique = true)
