@@ -20,12 +20,12 @@ public class Token implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(unique = true)
-    private String token;
+    private String refreshToken;
 
     private Date expiryDate;
 }

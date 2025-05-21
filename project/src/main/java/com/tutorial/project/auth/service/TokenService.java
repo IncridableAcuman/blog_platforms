@@ -40,21 +40,21 @@ public class TokenService {
                 .compact();
     }
 //    validate token
-    public boolean validateToken(String token){
+    public boolean validateToken(String refreshToken){
         try {
-            Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
-            return true;
+            Claims claims=Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(refreshToken).getBody();
+            return claims.getExpiration().after(new Date());
         } catch (Exception e) {
             return false;
         }
     }
 //    extract email with token
-    public String extractEmailFromToken(String token){
+    public String extractEmailFromToken(String refreshToken){
         Claims claims=Jwts
                 .parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(refreshToken)
                 .getBody();
         return claims.getSubject();
     }
