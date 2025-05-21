@@ -3,6 +3,7 @@ package com.tutorial.project.auth.service;
 import com.tutorial.project.auth.dto.AuthResponse;
 import com.tutorial.project.auth.dto.LoginRequest;
 import com.tutorial.project.auth.dto.RegisterRequest;
+import com.tutorial.project.auth.dto.TokenRequest;
 import com.tutorial.project.auth.model.Token;
 import com.tutorial.project.auth.model.User;
 import com.tutorial.project.auth.repository.TokenRepository;
@@ -67,5 +68,23 @@ public class AuthService {
         tokenRepository.save(token);
         cookieService.addTokenToCookie(response,token.getToken());
         return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),accessToken,refreshToken);
+    }
+//    refresh method
+    public AuthResponse refresh(String token ,HttpServletResponse response){
+        if(!tokenService.validateToken(token)){
+            throw new RuntimeException("Invalid token!");
+        }
+        String email=tokenService.extractEmailFromToken(token);
+        if(email==null || email.isEmpty()){
+            throw new RuntimeException("Invalid token");
+        }
+        User user=userRepository.findByEmail(email).orElseThrow(()->new RuntimeException("User not found!"));
+        Token token1=tokenRepository.findByUser(user).orElseThrow(()->new RuntimeException("Invalid token"));
+        if(!token1.getToken().equals(token)){
+            throw new RuntimeException("Token is mismatch");
+        }
+        String accessToken=tokenService.generateAccessToken(email);
+        cookieService.addTokenToCookie(response,token);
+        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),accessToken,token);
     }
 }
