@@ -1,8 +1,12 @@
 package com.tutorial.project.auth.service;
 
+import com.tutorial.project.auth.model.Token;
+import com.tutorial.project.auth.model.User;
+import com.tutorial.project.auth.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -11,10 +15,12 @@ import java.util.Base64;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
     private static final String secret=Base64.getEncoder().encodeToString("qwertyuiopasdfghjklzxcvbnm1234567890".getBytes(StandardCharsets.UTF_8));
     private static final long accessTime=900000;
     private static final long refreshTime=604800000;
+    private final TokenRepository tokenRepository;
 //generating key
     public Key getSigningKey(){
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
@@ -57,5 +63,13 @@ public class TokenService {
                 .parseClaimsJws(refreshToken)
                 .getBody();
         return claims.getSubject();
+    }
+//    create token
+    public Token createToken(User user,String refreshToken){
+        Token token=new Token();
+        token.setUser(user);
+        token.setRefreshToken(refreshToken);
+        token.setExpiryDate(new Date(System.currentTimeMillis()+refreshTime));
+        return tokenRepository.save(token);
     }
 }
