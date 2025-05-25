@@ -7,19 +7,23 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
 public class TokenService {
-    private static final String secret=Base64.getEncoder().encodeToString("qwertyuiopasdfghjklzxcvbnm1234567890".getBytes(StandardCharsets.UTF_8));
-    private static final long accessTime=900000;
-    private static final long refreshTime=604800000;
+
+    @Value("${jwt.secret}")
+    private String secret;
+    @Value("${jwt.access-time}")
+    private  long accessTime;
+    @Value("${jwt.refresh-time}")
+    private long refreshTime;
     private final TokenRepository tokenRepository;
 //generating key
     public Key getSigningKey(){

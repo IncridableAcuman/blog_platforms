@@ -38,7 +38,7 @@ public class AuthService {
     @Transactional
     public AuthResponse login(LoginRequest request,HttpServletResponse response){
         User user=userService.findUserFromDB(request.getEmail());
-        userService.isPassword(request.getPassword(),user.getPassword());
+        userService.validatePassword(request.getPassword(),user.getPassword());
         String accessToken=tokenService.generateAccessToken(user.getEmail());
         String refreshToken=tokenService.generateRefreshToken(user.getEmail());
 //

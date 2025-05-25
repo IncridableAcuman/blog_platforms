@@ -29,7 +29,7 @@ public class UserService {
     public User findUserFromDB(String email){
         return userRepository.findByEmail(email).orElseThrow(()->new ResourceNotFoundExceptionHandler("User not found!"));
     }
-    public void isPassword(String password,String userPassword){
+    public void validatePassword(String password,String userPassword){
         if(!passwordEncoder.matches(password,userPassword)){
             throw new BadRequestExceptionHandler("Invalid password!");
         }
