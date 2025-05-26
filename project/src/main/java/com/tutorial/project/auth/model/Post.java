@@ -1,6 +1,8 @@
 package com.tutorial.project.auth.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,17 +23,28 @@ public class Post implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
 
+    @NotBlank(message = "Title is required!")
+    @Size(min = 2,max = 100,message = "Title must be between 2 and 100 characters")
+    @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @NotBlank(message = "Content is required!")
+    @Size(min = 10,max = 2500,message = "Content must be between 10 and 2500 characters")
+    @Column(columnDefinition = "TEXT",nullable = false)
     private String content;
 
+    @NotBlank(message = "Author is required!")
+    @Size(min = 3,max = 50,message = "Author must be between 3 and 50 characters")
+    @Column(nullable = false)
     private String author;
 
+    @Column(nullable = false)
     private String image;
 
+    @Column(nullable = false)
     private Double price;
 
+    @Column(nullable = false)
     private String sourceUrl;
 
     private LocalDateTime createdAt;
