@@ -1,6 +1,7 @@
 package com.tutorial.project.auth.service;
 
 import com.tutorial.project.auth.dto.RegisterRequest;
+import com.tutorial.project.auth.model.Role;
 import com.tutorial.project.auth.model.User;
 import com.tutorial.project.auth.repository.UserRepository;
 import com.tutorial.project.exception.BadRequestExceptionHandler;
@@ -23,6 +24,7 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.ADMIN);
         return userRepository.save(user);
     }
 //    fin use

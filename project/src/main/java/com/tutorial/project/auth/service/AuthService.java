@@ -32,7 +32,7 @@ public class AuthService {
 //        create token and saving to db
         tokenService.createToken(user,refreshToken);
         cookieService.addTokenToCookie(response,refreshToken);
-        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),accessToken,refreshToken);
+        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),user.getRole(),accessToken,refreshToken);
     }
     //    login
     @Transactional
@@ -44,7 +44,7 @@ public class AuthService {
 //
         Token token=tokenRepository.findByUser(user).orElseGet(()-> tokenService.createToken(user,refreshToken));
         cookieService.addTokenToCookie(response,token.getRefreshToken());
-        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),accessToken,token.getRefreshToken());
+        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),user.getRole(),accessToken,token.getRefreshToken());
     }
     //    refresh method
     @Transactional
@@ -74,7 +74,7 @@ public class AuthService {
         }
         String newAccessToken=tokenService.generateAccessToken(email);
         cookieService.addTokenToCookie(response,refreshToken);
-        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),newAccessToken,refreshToken);
+        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),user.getRole(),newAccessToken,refreshToken);
     }
     //    logout
     @Transactional

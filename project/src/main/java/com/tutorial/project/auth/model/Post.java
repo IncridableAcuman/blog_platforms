@@ -30,7 +30,9 @@ public class Post implements Serializable {
 
     private String image;
 
-    private String videoUrl;
+    private Double price;
+
+    private String sourceUrl;
 
     private LocalDateTime createdAt;
 
