@@ -1,9 +1,11 @@
 package com.tutorial.project.auth.dto;
 
+import com.tutorial.project.auth.model.Comment;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @RequiredArgsConstructor
@@ -17,6 +19,7 @@ public class PostResponse {
     private String sourceUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    List<Comment> comments;
     public PostResponse(Long id,
                         String title,
                         String content,
@@ -25,7 +28,8 @@ public class PostResponse {
                         Double price,
                         String sourceUrl,
                         LocalDateTime createdAt,
-                        LocalDateTime updatedAt
+                        LocalDateTime updatedAt,
+                        List<Comment> comments
     ){
         this.id=id;
         this.title=title;
@@ -36,5 +40,6 @@ public class PostResponse {
         this.sourceUrl=sourceUrl;
         this.createdAt=createdAt;
         this.updatedAt=updatedAt;
+        this.comments=comments;
     }
 }
