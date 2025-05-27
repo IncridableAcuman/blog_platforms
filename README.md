@@ -23,3 +23,12 @@ Creating blog platform with spring boot gradle
     3.1 Dockerfile in backend
     3.2 Dockerfile in frontend
     3.3 docker-compose.yml 
+
+[//]: # (Client)
+4 Frontend
+    4.1 Login page
+    4.2 Register page
+    4.3 axiosInstance
+    4.4 Only Create post for admin
+    4.5 Zustand
+    4.6 Shadcn UI components
