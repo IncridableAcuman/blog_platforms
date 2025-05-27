@@ -24,6 +24,7 @@ public class TokenService {
     private  long accessTime;
     @Value("${jwt.refresh-time}")
     private long refreshTime;
+
     private final TokenRepository tokenRepository;
 //generating key
     public Key getSigningKey(){

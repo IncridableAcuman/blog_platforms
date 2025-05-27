@@ -38,12 +38,12 @@ public class PostController {
         return ResponseEntity.ok(postService.getAllPosts());
     }
 //    update a post
-    @PutMapping("/update/{id")
+    @PutMapping("/update/{id}")
     public ResponseEntity<PostResponse> updatePost(@Valid @PathVariable Long id,@Valid @RequestBody PostRequest request){
         return ResponseEntity.ok(postService.updatePost(id,request));
     }
 //    delete a post by id
-    @DeleteMapping("/delete/{id")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deletePost(@Valid @PathVariable Long id){
         postService.deletePost(id);
         return ResponseEntity.ok("Post deleted");

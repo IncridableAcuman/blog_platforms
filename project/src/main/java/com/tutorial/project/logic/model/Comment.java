@@ -26,12 +26,4 @@ public class Comment implements Serializable {
 
     private LocalDateTime createAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
-
-    @PrePersist
-    protected void oneCreate(){
-        this.createAt=LocalDateTime.now();
-    }
 }

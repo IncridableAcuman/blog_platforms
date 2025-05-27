@@ -10,7 +10,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -29,7 +28,7 @@ public class Post implements Serializable {
     private String title;
 
     @NotBlank(message = "Content is required!")
-    @Size(min = 10,max = 2500,message = "Content must be between 10 and 2500 characters")
+    @Size(min = 10,max = 3000,message = "Content must be between 10 and 2500 characters")
     @Column(columnDefinition = "TEXT",nullable = false)
     private String content;
 
@@ -38,12 +37,15 @@ public class Post implements Serializable {
     @Column(nullable = false)
     private String author;
 
+    @NotBlank(message = "Image is required!")
     @Column(nullable = false)
     private String image;
 
+    @NotBlank(message = "Price is required")
     @Column(nullable = false)
     private Double price;
 
+    @NotBlank(message = "SourceUrl is required!")
     @Column(nullable = false)
     private String sourceUrl;
 
@@ -51,15 +53,4 @@ public class Post implements Serializable {
 
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Comment> comments;
-
-    @PrePersist
-    protected void oneCreate(){
-        this.createdAt=this.updatedAt=LocalDateTime.now();
-    }
-    @PreUpdate
-    protected void oneUpdate(){
-        this.updatedAt=LocalDateTime.now();
-    }
 }

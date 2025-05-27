@@ -24,7 +24,7 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.ADMIN);
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 //    fin use
