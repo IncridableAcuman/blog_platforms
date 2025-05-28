@@ -7,12 +7,14 @@ import com.tutorial.project.logic.repository.UserRepository;
 import com.tutorial.project.exception.BadRequestExceptionHandler;
 import com.tutorial.project.exception.ResourceNotFoundExceptionHandler;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService  {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 

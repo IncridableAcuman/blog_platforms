@@ -8,23 +8,44 @@ import com.tutorial.project.logic.repository.PostRepository;
 import com.tutorial.project.exception.ResourceNotFoundExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final String UPLOAD_DIR="uploads/";
+
+    private String saveImage(MultipartFile multipartFile){
+        try {
+            String filename= UUID.randomUUID()+"_"+multipartFile.getOriginalFilename();
+            Path filePath= Paths.get(UPLOAD_DIR+filename);
+            Files.createDirectory(filePath.getParent());
+            Files.copy(multipartFile.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
+            return filename;
+        } catch (IOException e){
+            throw new BadRequestExceptionHandler("Image upload failed: "+e.getMessage());
+        }
+    }
 
 //    create a post
     public PostResponse createPost(PostRequest request){
+        String fileImage=saveImage(request.getImage());
         try {
             Post post=new Post();
             post.setTitle(request.getTitle());
             post.setContent(request.getContent());
             post.setAuthor(request.getAuthor());
-            post.setImage((request.getImage()));
+            post.setImage(fileImage);
             post.setPrice(request.getPrice());
             post.setSourceUrl(request.getSourceUrl());
             post.setCreatedAt(LocalDateTime.now());
@@ -71,12 +92,13 @@ public class PostService {
     }
 //    update a post
     public PostResponse updatePost(Long id,PostRequest request){
+        String fileImage=saveImage(request.getImage());
         try {
             Post post=postRepository.findById(id).orElseThrow(()->new ResourceNotFoundExceptionHandler("Post not found!"));
             post.setTitle(request.getTitle());
             post.setContent(request.getContent());
             post.setAuthor(request.getAuthor());
-            post.setImage(request.getImage());
+            post.setImage(fileImage);
             post.setPrice(request.getPrice());
             post.setSourceUrl(request.getSourceUrl());
             post.setCreatedAt(LocalDateTime.now());

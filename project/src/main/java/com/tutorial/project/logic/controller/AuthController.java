@@ -29,14 +29,12 @@ public class AuthController {
     }
 //    refresh
     @GetMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@RequestHeader("Authorization") String authorization,HttpServletResponse response){
-        String refreshToken=authorization.substring(7);
+    public ResponseEntity<AuthResponse> refresh(@CookieValue(name = "token",required = false) String refreshToken,HttpServletResponse response){
         return ResponseEntity.ok(authService.refresh(refreshToken,response));
     }
 //    logout
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorization,HttpServletResponse response){
-        String refreshToken=authorization.substring(7);
+    public ResponseEntity<String> logout(@CookieValue(name = "token",required = false) String refreshToken,HttpServletResponse response){
         authService.logout(refreshToken,response);
         return ResponseEntity.ok("User logged out");
     }
