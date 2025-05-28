@@ -53,46 +53,46 @@ public class AuthService {
             cookieService.addTokenToCookie(response,token.getRefreshToken());
             return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),
                     user.getRole(),accessToken,token.getRefreshToken());
-        } catch (RuntimeException e) {
+        } catch (BadRequestExceptionHandler e) {
             throw new BadRequestExceptionHandler(e.getMessage());
         }
 
     }
     //    refresh method
     @Transactional
-    public AuthResponse refresh(String refreshToken ,HttpServletResponse response){
+    public AuthResponse refresh(String refreshToken, HttpServletResponse response) {
         try {
-            if(refreshToken==null || refreshToken.isEmpty()){
-                throw new RuntimeException("Token is required!");
+            if (refreshToken == null || refreshToken.isEmpty()) {
+                throw new BadRequestExceptionHandler("Token is required!");
             }
-            if(!tokenService.validateToken(refreshToken)){
-                throw new RuntimeException("Invalid token!");
+            // Tokenni validatsiya qilish
+            if (!tokenService.validateToken(refreshToken)) {
+                throw new BadRequestExceptionHandler("Invalid token!");
             }
-            String email;
-            try {
-                email=tokenService.extractEmailFromToken(refreshToken);
-            } catch (RuntimeException e) {
-                throw new RuntimeException(e);
-            }
-            if(email==null || email.isEmpty()){
+            // Emailni extract qilish
+            String email = tokenService.extractEmailFromToken(refreshToken);
+            if (email == null || email.isEmpty()) {
                 throw new BadRequestExceptionHandler("Invalid token content!");
             }
-            User user=userService.findUserFromDB(email);
-            Token storedToken=tokenRepository.findByUser(user).orElseThrow(()->new BadRequestExceptionHandler("Invalid token!"));
-            if(!storedToken.getRefreshToken().equals(refreshToken)){
-                throw new BadRequestExceptionHandler("Token invalid mismatch!");
+            // Foydalanuvchini topish
+            User user = userService.findUserFromDB(email);
+            // Tokenni bazadan tekshirish
+            Token storedToken = tokenRepository.findByRefreshToken(refreshToken)
+                    .orElseThrow(() -> new BadRequestExceptionHandler("Invalid refresh token!"));
+            if (!storedToken.getUser().getId().equals(user.getId())) {
+                throw new BadRequestExceptionHandler("Token does not belong to user!");
             }
-            if(storedToken.getExpiryDate().before(new Date())){
-                throw new RuntimeException("Refresh token expired!");
+            if (storedToken.getExpiryDate().before(new Date())) {
+                throw new BadRequestExceptionHandler("Refresh token expired!");
             }
-            String newAccessToken=tokenService.generateAccessToken(email);
-            cookieService.addTokenToCookie(response,refreshToken);
-            return new AuthResponse(user.getId(),user.getUsername(),
-                    user.getEmail(),user.getRole(),newAccessToken,refreshToken);
+            // Yangi access token generatsiya qilish
+            String newAccessToken = tokenService.generateAccessToken(email);
+            cookieService.addTokenToCookie(response, refreshToken);
+            return new AuthResponse(user.getId(), user.getUsername(),
+                    user.getEmail(), user.getRole(), newAccessToken, refreshToken);
         } catch (RuntimeException e) {
             throw new BadRequestExceptionHandler(e.getMessage());
         }
-
     }
     //    logout
     @Transactional
