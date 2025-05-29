@@ -44,7 +44,7 @@ public class PostController {
         return ResponseEntity.ok(postService.getAPostById(id));
     }
 //    get posts by author
-    @GetMapping("/get/users/{author}")
+    @GetMapping("/get/authors/{author}")
     public ResponseEntity<List<Post>> getAPostByAuthor(@Valid @PathVariable String author){
         return ResponseEntity.ok(postService.getAPostByAuthor(author));
     }

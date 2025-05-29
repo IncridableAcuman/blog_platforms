@@ -8,8 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+
 
 @Entity
 @Table(name="users")
@@ -17,7 +22,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
-public class User  implements Serializable {
+public class User  implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,4 +42,37 @@ public class User  implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+//    user details
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return List.of(new SimpleGrantedAuthority("ROLE_"+role.name()));
+    }
+//  getPassword
+    @Override
+    public String getPassword(){
+        return password;
+    }
+//get username
+    @Override
+    public String getUsername(){
+        return email;
+    }
+//    isExpired
+    public boolean isAccountNonExpired(){
+        return true;
+    }
+//    is locked
+    @Override
+    public boolean isAccountNonLocked(){
+        return true;
+    }
+// credential
+    @Override
+    public boolean isCredentialsNonExpired(){
+        return true;
+    }
+//    is enabled
+    public boolean isEnabled(){
+        return true;
+    }
 }
