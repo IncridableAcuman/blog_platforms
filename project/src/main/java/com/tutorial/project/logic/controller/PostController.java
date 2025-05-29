@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,8 +20,23 @@ public class PostController {
     private final PostService postService;
 //    create a post
     @PostMapping("/create")
-    public ResponseEntity<PostResponse> createPost(@Valid @RequestBody PostRequest request){
-        return ResponseEntity.ok(postService.createPost(request));
+    public ResponseEntity<PostResponse> createPost(
+            @RequestParam String title,
+            @RequestParam String content,
+            @RequestParam String author,
+            @RequestParam Double price,
+            @RequestParam String sourceUrl,
+            @RequestParam MultipartFile image
+    ){
+        PostRequest request = new PostRequest();
+        request.setTitle(title);
+        request.setContent(content);
+        request.setAuthor(author);
+        request.setPrice(price);
+        request.setSourceUrl(sourceUrl);
+        request.setImage(image);
+        PostResponse response = postService.createPost(request);
+        return ResponseEntity.ok(response);
     }
 //    get a post by id
     @GetMapping("/get/{id}")
@@ -28,7 +44,7 @@ public class PostController {
         return ResponseEntity.ok(postService.getAPostById(id));
     }
 //    get posts by author
-    @GetMapping("/get/{author}")
+    @GetMapping("/get/users/{author}")
     public ResponseEntity<List<Post>> getAPostByAuthor(@Valid @PathVariable String author){
         return ResponseEntity.ok(postService.getAPostByAuthor(author));
     }
