@@ -14,6 +14,6 @@ spring:
             show-sql: true
 
 jwt:
-    secret: qwertyuiopasdfghjklzxcvbnm1234567890
+    secret: ABCD1234EFGH5678IJKL9012MNOP3456QRST7890UVWX1234YZ==
     access-time: 900000
     refresh-time: 604800000
