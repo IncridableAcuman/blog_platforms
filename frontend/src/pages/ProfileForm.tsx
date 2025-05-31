@@ -44,7 +44,6 @@ function ProfileForm() {
       localStorage.setItem("role",user.role);
       toast.success("Successfully");
       login(user,data.accessToken);
-      console.log(data);
       navigate("/");
     } catch (error) {
       console.log(error);
