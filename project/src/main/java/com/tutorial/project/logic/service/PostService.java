@@ -23,29 +23,29 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final String UPLOAD_DIR="uploads/";
+//     private final String UPLOAD_DIR="uploads/";
 
-   private String saveImage(MultipartFile multipartFile){
-        try {
-            String filename= UUID.randomUUID()+"_"+multipartFile.getOriginalFilename();
-            Path filePath= Paths.get(UPLOAD_DIR+filename);
-                Files.createDirectories(filePath.getParent());
-            Files.copy(multipartFile.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
-            return filename;
-        } catch (IOException e){
-            throw new BadRequestExceptionHandler("Image upload failed: "+e.getMessage());
-        }
- }
+//    private String saveImage(MultipartFile multipartFile){
+//         try {
+//             String filename= UUID.randomUUID()+"_"+multipartFile.getOriginalFilename();
+//             Path filePath= Paths.get(UPLOAD_DIR+filename);
+//                 Files.createDirectories(filePath.getParent());
+//             Files.copy(multipartFile.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
+//             return filename;
+//         } catch (IOException e){
+//             throw new BadRequestExceptionHandler("Image upload failed: "+e.getMessage());
+//         }
+//  }
 
 //    create a post
     public PostResponse createPost(PostRequest request){
-       String imageFileName=saveImage(request.getImage());
+    //    String imageFileName=saveImage(request.getImage());
         try {
             Post post=new Post();
             post.setTitle(request.getTitle());
             post.setContent(request.getContent());
             post.setAuthor(request.getAuthor());
-            post.setImage(imageFileName);
+            post.setImage(request.getImage());
             post.setPrice(request.getPrice());
             post.setSourceUrl(request.getSourceUrl());
             post.setCreatedAt(LocalDateTime.now());
@@ -92,13 +92,13 @@ public class PostService {
     }
 //    update a post
     public PostResponse updatePost(Long id,PostRequest request){
-       String fileImage=saveImage(request.getImage());
+       //String fileImage=saveImage(request.getImage());
         try {
             Post post=postRepository.findById(id).orElseThrow(()->new ResourceNotFoundExceptionHandler("Post not found!"));
             post.setTitle(request.getTitle());
             post.setContent(request.getContent());
             post.setAuthor(request.getAuthor());
-            post.setImage(fileImage);
+            post.setImage(request.getImage());
             post.setPrice(request.getPrice());
             post.setSourceUrl(request.getSourceUrl());
             post.setUpdatedAt(LocalDateTime.now());

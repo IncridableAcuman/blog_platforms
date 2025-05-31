@@ -11,11 +11,28 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+// import { useEffect } from "react"
+// import { toast } from "sonner"
+// import axiosInstance from "@/api/axiosInstance"
 const Cards = () => {
+
+//   const handleSubmit=async ()=>{
+//     try {
+//       const {data}= await axiosInstance.get("/post/get/all");
+//       console.log(data)
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Something went wrong!");
+//     }
+//   }
+//   useEffect(()=>{
+// handleSubmit();
+//   },[])
   return (
     <>
     <div className="flex items-center justify-center">
- <Card className="w-[350px]">
+      
+    <Card className="w-[350px]">
       <CardHeader>
         <img src="./webpack.png" alt="webpack" />
       </CardHeader>

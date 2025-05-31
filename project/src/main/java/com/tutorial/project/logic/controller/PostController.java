@@ -20,21 +20,7 @@ public class PostController {
     private final PostService postService;
 //    create a post
     @PostMapping("/create")
-    public ResponseEntity<PostResponse> createPost(
-            @RequestParam String title,
-            @RequestParam String content,
-            @RequestParam String author,
-            @RequestParam Double price,
-            @RequestParam String sourceUrl,
-            @RequestParam MultipartFile image
-    ){
-        PostRequest request = new PostRequest();
-        request.setTitle(title);
-        request.setContent(content);
-        request.setAuthor(author);
-        request.setPrice(price);
-        request.setSourceUrl(sourceUrl);
-        request.setImage(image);
+    public ResponseEntity<PostResponse> createPost(@RequestBody PostRequest request ){
         PostResponse response = postService.createPost(request);
         return ResponseEntity.ok(response);
     }

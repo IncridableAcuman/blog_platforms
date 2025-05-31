@@ -14,9 +14,11 @@ export const registerSchema=z.object({
 // post schema
 export const postSchema=z.object({
     title:z.string({message:"Title must be between 3 and 100 characters!"}).min(3).max(100),
-    constent:z.string({message:"Conent must be between 5 and 3000 characters!"}).min(5).max(300),
+    content:z.string({message:"Conent must be between 5 and 3000 characters!"}).min(5).max(300),
     author:z.string({message:"Author must be between 3 and 50 characters!"}).min(3).max(50),
-    image:z.string({message:"Image must be  required!"}),
-    price:z.string({message:"Price must be required!"}),
+    image:z.any().refine(file=>file instanceof File,{
+        message:'Image is required and must be a valid file!'
+    }),
+    price:z.number({message:"Price must be required!"}),
     sourceUrl:z.string({message:"Url must be required!"})
 });
