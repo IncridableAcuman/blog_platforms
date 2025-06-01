@@ -28,6 +28,7 @@ import axiosInstance from "@/api/axiosInstance"
 import { useNavigate } from "react-router-dom"
 
 const Navbar = () => {
+ const role=localStorage.getItem("role");
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -141,7 +142,9 @@ const Navbar = () => {
       <div className="flex items-center gap-4">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline">Create</Button>
+            {role==="ADMIN" && (
+            <Button variant="outline">Create</Button>              
+            )}
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>

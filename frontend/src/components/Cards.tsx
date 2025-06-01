@@ -14,15 +14,17 @@ import {
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import axiosInstance from "@/api/axiosInstance"
+import { DialogDemo } from "./DialogDemo"
+import { AlertDialogDemo } from "./AlertDialogDemo"
 
 const Cards = () => {
   const [posts, setPosts] = useState([])
+  const role=localStorage.getItem("role");
 
   const handleSubmit = async () => {
     try {
       const { data } = await axiosInstance.get("/post/get/all")
       setPosts(data)
-      console.log(data)
     } catch (error) {
       console.log(error)
       toast.error("Something went wrong!")
@@ -53,13 +55,15 @@ const Cards = () => {
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
                   <AccordionTrigger>What is {item?.title}?</AccordionTrigger>
-                  <AccordionContent>{item?.content}</AccordionContent>
+                  <AccordionContent>{item?.content.slice(0,20)}...</AccordionContent>
                 </AccordionItem>
               </Accordion>
             </div>
           </CardContent>
           <CardFooter className="flex justify-between">
             <Button variant="outline">Read more</Button>
+            {role==="ADMIN" && (<Button variant="outline"><DialogDemo/></Button>)}
+            {role==="ADMIN" && (<Button variant="outline"><AlertDialogDemo/></Button> )}                
             <p className="text-sm text-muted-foreground">{item?.author}</p>
           </CardFooter>
         </Card>

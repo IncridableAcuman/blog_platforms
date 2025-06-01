@@ -53,7 +53,7 @@ public class AuthService {
             if(token!=null){
                 token.setRefreshToken(refreshToken);
                 token.setExpiryDate(new Date(System.currentTimeMillis()+(7*24*60*60*1000)));
-                tokenRepository.save(token)
+                tokenRepository.save(token);
             }else{
                 token=tokenService.createToken(user, refreshToken);
             }
