@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -11,31 +10,75 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useState } from "react"
+import { Textarea } from "./ui/textarea"
 
 export function DialogDemo() {
+      const [formData, setFormData] = useState({
+        title: "",
+        content: "",
+        author: "",
+        image:'',
+        price: 0,
+        sourceUrl: "",
+      })
+
+      const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+          const { name, value } = e.target
+          setFormData(prev => ({
+            ...prev,
+            [name]: name === "price" ? Number(value) : value,
+          }))
+        }
+          const renderForm = () => (
+    <div className="grid gap-4 py-4 p-4">
+      {[
+        { label: "Title", name: "title", type: "text", value: formData.title },
+        { label: "Author", name: "author", type: "text", value: formData.author },
+        { label: "Price", name: "price", type: "number", value: formData.price },
+        { label: "Source URL", name: "sourceUrl", type: "text", value: formData.sourceUrl },
+        { label: "Image", name: "image", type: "text", value: formData.image },
+      ].map(({ label, name, type, value }) => (
+        <div key={name} className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor={name} className="text-right">{label}</Label>
+          <Input
+            id={name}
+            name={name}
+            type={type}
+            value={value}
+            onChange={handleInputChange}
+            className="col-span-3"
+            placeholder={label}
+          />
+        </div>
+      ))}
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="content" className="text-right">Content</Label>
+        <Textarea
+          id="content"
+          name="content"
+          placeholder="Content"
+          value={formData.content}
+          onChange={handleInputChange}
+          className="col-span-3"
+        />
+      </div>
+
+    </div>
+  )
+
   return (
     <Dialog>
       <form>
         <DialogTrigger asChild>
-          <Button variant="outline">Update</Button>
+          <Button variant="outline">Edit</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
-            </DialogDescription>
+            <DialogTitle>Edit post</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="username-1">Username</Label>
-              <Input id="username-1" name="username" defaultValue="@peduarte" />
-            </div>
+            {renderForm()}
           </div>
           <DialogFooter>
             <DialogClose asChild>

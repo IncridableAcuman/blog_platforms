@@ -107,16 +107,7 @@ const Navbar = () => {
           className="col-span-3"
         />
       </div>
-      {/* <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="image" className="text-right">Image</Label>
-        <Input
-          id="image"
-          type="text"
-          value={formData.image}
-          onChange={handleInputChange}
-          className="col-span-3"
-        />
-      </div> */}
+
     </div>
   )
 
