@@ -50,13 +50,6 @@ public class AuthService {
             String refreshToken=tokenService.generateRefreshToken(user.getEmail());
 //
             Token token=tokenRepository.findByUser(user).orElseGet(()-> tokenService.createToken(user,refreshToken));
-            if(token!=null){
-                token.setRefreshToken(refreshToken);
-                token.setExpiryDate(new Date(System.currentTimeMillis()+(7*24*60*60*1000)));
-                tokenRepository.save(token);
-            }else{
-                token=tokenService.createToken(user, refreshToken);
-            }
             cookieService.addTokenToCookie(response,token.getRefreshToken());
             return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),
                     user.getRole(),accessToken,token.getRefreshToken());

@@ -20,10 +20,15 @@ import { AlertDialogDemo } from "./AlertDialogDemo"
 const Cards = () => {
   const [posts, setPosts] = useState([])
   const role = localStorage.getItem("role")
-
+    const token=localStorage.getItem("accessToken");
   const handleSubmit = async () => {
     try {
-      const { data } = await axiosInstance.get("/post/get/all")
+      const { data } = await axiosInstance.get("/post/get/all",{
+        headers:{
+          Authorization:`Bearer ${token}`,
+        },
+        withCredentials:true
+      })
       setPosts(data)
     } catch (error) {
       console.log(error)
@@ -42,7 +47,7 @@ const Cards = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
       {posts.map((item, index) => (
-        <Card className="w-full" key={item._id}>
+        <Card className="w-full" key={item?.id}>
           <CardHeader>
             <img
               src={item?.image}
@@ -69,7 +74,7 @@ const Cards = () => {
             {role === "ADMIN" && (
               <>
                 <DialogDemo />
-                <AlertDialogDemo id={item._id} onDelete={handleDelete} />
+                <AlertDialogDemo id={item?.id} onDelete={handleDelete} />
               </>
             )}
             <p className="text-sm text-muted-foreground">{item?.author}</p>

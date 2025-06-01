@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !originalRequest._isRetry) {
+        if (error.response?.status === 403 && !originalRequest._isRetry) {
             originalRequest._isRetry = true;
             try {
                 // Use a fresh axios instance for refresh

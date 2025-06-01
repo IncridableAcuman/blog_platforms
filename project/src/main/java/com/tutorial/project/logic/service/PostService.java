@@ -102,7 +102,7 @@ public class PostService {
             post.setPrice(request.getPrice());
             post.setSourceUrl(request.getSourceUrl());
             post.setUpdatedAt(LocalDateTime.now());
-            postRepository.save(post);
+            post=postRepository.save(post);
             return new PostResponse(post.getId(),
                     post.getTitle(),
                     post.getContent(),

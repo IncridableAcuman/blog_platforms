@@ -16,7 +16,7 @@ import { toast } from "sonner"
 export function AlertDialogDemo({ id, onDelete }) {
   const handleSubmit = async () => {
     try {
-      await axiosInstance.post(`/post/delete/${id}`)
+      await axiosInstance.delete(`/post/delete/${id}`)
       toast.success("Post deleted successfully.")
       onDelete(id) // ← id ni yuboramiz Cardsga
     } catch (error) {

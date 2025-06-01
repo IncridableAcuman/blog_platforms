@@ -29,9 +29,20 @@ public class AuthController {
     }
 //    refresh
     @GetMapping("/refresh")
-    public ResponseEntity<AuthResponse> refresh(@CookieValue(name = "token",required = false) String refreshToken,HttpServletResponse response){
-        return ResponseEntity.ok(authService.refresh(refreshToken,response));
+public ResponseEntity<AuthResponse> refresh(
+        @RequestHeader(name = "Authorization", required = false) String headerToken,
+        @CookieValue(name = "token", required = false) String cookieToken,
+        HttpServletResponse response) {
+    String refreshToken = null;
+
+    if (headerToken != null && headerToken.startsWith("Bearer ")) {
+        refreshToken = headerToken.substring(7);
+    } else if (cookieToken != null) {
+        refreshToken = cookieToken;
     }
+
+    return ResponseEntity.ok(authService.refresh(refreshToken, response));
+}
 //    logout
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@CookieValue(name = "token",required = false) String refreshToken,HttpServletResponse response){
