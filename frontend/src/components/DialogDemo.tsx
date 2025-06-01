@@ -12,8 +12,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { Textarea } from "./ui/textarea"
+import { toast } from "sonner"
+import axiosInstance from "@/api/axiosInstance"
 
-export function DialogDemo() {
+
+export function DialogDemo({id}) {
       const [formData, setFormData] = useState({
         title: "",
         content: "",
@@ -66,6 +69,15 @@ export function DialogDemo() {
 
     </div>
   )
+  const handleSubmit=async ()=>{
+    try {
+      await axiosInstance.put(`/post/update/${id}`,formData);
+      toast.success("Post updated successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!");
+    }
+  }
 
   return (
     <Dialog>
@@ -84,7 +96,7 @@ export function DialogDemo() {
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit" onClick={handleSubmit}>Save changes</Button>
           </DialogFooter>
         </DialogContent>
       </form>

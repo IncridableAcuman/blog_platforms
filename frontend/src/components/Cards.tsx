@@ -73,7 +73,7 @@ const Cards = () => {
             <Button variant="outline">Read more</Button>
             {role === "ADMIN" && (
               <>
-                <DialogDemo />
+                <DialogDemo id={item?.id} />
                 <AlertDialogDemo id={item?.id} onDelete={handleDelete} />
               </>
             )}
